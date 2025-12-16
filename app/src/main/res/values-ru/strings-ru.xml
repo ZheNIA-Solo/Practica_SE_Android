@@ -2,11 +2,11 @@
 <resources>
     <string name="wellcome">Добро пожаловать</string>
     <string name="registration">Регистрация</string>
-    <string name="filling_data">Заполните Свои данные</string>
+    <string name="filling_data">Заполните Свои Данные</string>
     <string name="name">Ваше имя</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
-    <string name="approval">Даю согласие на обработку персональных данных</string>
+    <string name="approval">Даю согласие на обработку\nперсональных данных</string>
     <string name="start_journey">Начнем путешествие</string>
     <string name="collection">Умная, великолепная и модная коллекция Изучите сейчас</string>
     <string name="power">У вас есть сила, чтобы</string>
@@ -20,7 +20,7 @@
     <string name="already_have_account">Есть аккаунт? Войти</string>
     <string name="recovery">Воcстановить</string>
     <string name="forgot">Забыл пароль</string>
-    <string name="Enter_email_account">Введите свою учетную запись для  сброса</string>
+    <string name="enter_email_account">Введите свою учетную запись для  сброса</string>
     <string name="send">Отправить</string>
     <string name="check_email">Проверьте Ваш Email</string>
     <string name="send_password_recovery">Мы отправили код восстановления пароля на вашу электронную почту.</string>
@@ -38,7 +38,7 @@
     <string name="enter_email_to_reset">Акции</string>
     <string name="favourite">Избранное</string>
     <string name="cart">Корзина</string>
-    <string name="Items">товара</string>
+    <string name="items">товара</string>
     <string name="subtotal">Сумма</string>
     <string name="delivery">Доставка</string>
     <string name="tota_cost">Итого</string>
@@ -69,4 +69,5 @@
     <string name="confirm">подтвердить</string>
     <string name="map">карта</string>
     <string name="loyalty_card">карта лояльности</string>
+    <string name="app_name">Курсовая работа</string>
 </resources>
