@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,9 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project_practice.R
 
-@Preview(showBackground = true)
 @Composable
-fun RegisterAccount() {
+fun RegisterAccount(
+    onBackClick: () -> Unit,
+    onRegisterSuccess: () -> Unit,
+    onSignInClick: () -> Unit
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -61,6 +65,13 @@ fun RegisterAccount() {
     var isChecked by remember { mutableStateOf(false) }
     var showEmailErrorDialog by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf("") }
+    var registrationSuccess by remember { mutableStateOf(false) }
+
+    LaunchedEffect(registrationSuccess) {
+        if (registrationSuccess) {
+            onRegisterSuccess()
+        }
+    }
 
     fun isValidEmail(email: String): Boolean {
         val pattern = Regex("^[a-z0-9]+@[a-z0-9]+\\.[a-z]{2,}\$")
@@ -68,7 +79,6 @@ fun RegisterAccount() {
     }
 
     fun validateAndRegister() {
-
         if (!isValidEmail(email)) {
             emailError = when {
                 email.isEmpty() -> "Поле email не может быть пустым"
@@ -88,6 +98,7 @@ fun RegisterAccount() {
         }
 
         println("Регистрация успешна: $name, $email")
+        registrationSuccess = true
     }
 
     if (showEmailErrorDialog) {
@@ -109,8 +120,7 @@ fun RegisterAccount() {
         modifier = Modifier.fillMaxSize()
     ) {
         Button(
-            onClick = {
-            },
+            onClick = onBackClick,
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.background),
@@ -163,7 +173,7 @@ fun RegisterAccount() {
             textStyle = TextStyle(fontSize = 14.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
             shape = RoundedCornerShape(20.dp)
         )
 
@@ -183,12 +193,11 @@ fun RegisterAccount() {
             textStyle = TextStyle(fontSize = 14.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
             shape = RoundedCornerShape(20.dp),
             isError = !isValidEmail(email) && email.isNotEmpty()
         )
 
-        // Подсказка под email полем
         if (email.isNotEmpty() && !isValidEmail(email)) {
             Text(
                 text = "Пример: name@domain.ru",
@@ -236,7 +245,7 @@ fun RegisterAccount() {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
             shape = RoundedCornerShape(20.dp)
         )
 
@@ -307,7 +316,7 @@ fun RegisterAccount() {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(start = 20.dp, end = 20.dp)
                 .height(50.dp)
         ) {
             Text(
@@ -335,56 +344,18 @@ fun RegisterAccount() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 50.dp)
+                .clickable(onClick = onSignInClick)
         )
     }
 }
 
-fun validateEmailDetails(email: String): Pair<Boolean, String> {
-    if (email.isEmpty()) return Pair(false, "Email не может быть пустым")
-
-    if (!email.contains("@")) {
-        return Pair(false, "Email должен содержать символ @")
-    }
-
-    val parts = email.split("@")
-    if (parts.size != 2) {
-        return Pair(false, "Неверный формат email")
-    }
-
-    val localPart = parts[0]
-    val domainPart = parts[1]
-
-    if (localPart.isEmpty()) {
-        return Pair(false, "Имя в email не может быть пустым")
-    }
-
-    if (!localPart.all { it.isLowerCase() || it.isDigit() }) {
-        return Pair(false, "Имя в email может содержать только строчные буквы и цифры")
-    }
-
-    if (!domainPart.contains(".")) {
-        return Pair(false, "Доменное имя должно содержать точку")
-    }
-
-    val domainParts = domainPart.split(".")
-    if (domainParts.size < 2) {
-        return Pair(false, "Неверный формат доменного имени")
-    }
-
-    val domainName = domainParts[0]
-    val topLevelDomain = domainParts[1]
-
-    if (!domainName.all { it.isLowerCase() || it.isDigit() }) {
-        return Pair(false, "Доменное имя может содержать только строчные буквы и цифры")
-    }
-
-    if (topLevelDomain.length < 2) {
-        return Pair(false, "Старший домен должен содержать минимум 2 символа")
-    }
-
-    if (!topLevelDomain.all { it.isLowerCase() }) {
-        return Pair(false, "Старший домен должен содержать только строчные буквы")
-    }
-
-    return Pair(true, "Email корректен")
+// Preview функция
+@Preview(showBackground = true, name = "Register Account")
+@Composable
+fun RegisterAccountPreview() {
+    RegisterAccount(
+        onBackClick = { /* заглушка для preview */ },
+        onRegisterSuccess = { /* заглушка для preview */ },
+        onSignInClick = { /* заглушка для preview */ }
+    )
 }

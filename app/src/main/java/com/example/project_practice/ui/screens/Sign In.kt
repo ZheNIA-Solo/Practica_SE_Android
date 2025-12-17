@@ -13,7 +13,7 @@ import com.example.project_practice.R
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen(
+fun SignIn(
 
 ) {
     Column(
