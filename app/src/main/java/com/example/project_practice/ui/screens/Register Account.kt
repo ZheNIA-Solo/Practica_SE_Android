@@ -18,11 +18,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,19 +53,63 @@ import com.example.project_practice.R
 
 @Preview(showBackground = true)
 @Composable
-fun RegistrationScreen() {
+fun RegisterAccount() {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var isChecked by remember { mutableStateOf(false) }
+    var showEmailErrorDialog by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf("") }
+
+    fun isValidEmail(email: String): Boolean {
+        val pattern = Regex("^[a-z0-9]+@[a-z0-9]+\\.[a-z]{2,}\$")
+        return pattern.matches(email)
+    }
+
+    fun validateAndRegister() {
+
+        if (!isValidEmail(email)) {
+            emailError = when {
+                email.isEmpty() -> "Поле email не может быть пустым"
+                !email.contains("@") -> "Email должен содержать символ @"
+                !email.contains(".") -> "Email должен содержать точку"
+                email.any { it.isUpperCase() } -> "Email должен содержать только строчные буквы"
+                !email.substringBefore("@").all { it.isLowerCase() || it.isDigit() } ->
+                    "Имя в email может содержать только строчные буквы и цифры"
+                !email.substringAfter("@").substringBefore(".").all { it.isLowerCase() || it.isDigit() } ->
+                    "Доменное имя может содержать только строчные буквы и цифры"
+                email.substringAfterLast(".").length < 2 ->
+                    "Старший домен должен содержать минимум 2 символа"
+                else -> "Неверный формат email. Пример: name@domain.ru"
+            }
+            showEmailErrorDialog = true
+            return
+        }
+
+        println("Регистрация успешна: $name, $email")
+    }
+
+    if (showEmailErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showEmailErrorDialog = false },
+            title = { Text("Ошибка email") },
+            text = { Text(emailError) },
+            confirmButton = {
+                TextButton(
+                    onClick = { showEmailErrorDialog = false }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Button(
             onClick = {
-                // Действия для кнопки назад
             },
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(
@@ -71,10 +117,7 @@ fun RegistrationScreen() {
                 contentColor = colorResource(R.color.text)
             ),
             modifier = Modifier
-                .padding(
-                    start = 20.dp,
-                    top = 30.dp
-                )
+                .padding(start = 20.dp, top = 30.dp)
                 .size(45.dp)
         ) {
             Text(
@@ -83,6 +126,7 @@ fun RegistrationScreen() {
                 textAlign = TextAlign.Center
             )
         }
+
         Text(
             text = stringResource(R.string.registration),
             color = colorResource(R.color.text),
@@ -90,8 +134,9 @@ fun RegistrationScreen() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding( top = 10.dp )
+                .padding(top = 10.dp)
         )
+
         Text(
             text = stringResource(R.string.filling_data),
             color = colorResource(R.color.sub_text_dark),
@@ -99,70 +144,70 @@ fun RegistrationScreen() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding( top = 5.dp )
+                .padding(top = 5.dp)
         )
+
         Text(
             text = stringResource(R.string.name),
             color = colorResource(R.color.text),
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start = 20.dp,
-                    top = 30.dp
-                )
+                .padding(start = 20.dp, top = 30.dp)
         )
+
         TextField(
             value = name,
             onValueChange = { name = it },
-            placeholder = { Text("xxxxxxxx")},
+            placeholder = { Text("xxxxxxxx") },
             textStyle = TextStyle(fontSize = 14.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 10.dp
-                ),
-            shape = RoundedCornerShape(20.dp),
-            /* colors = TextFieldDefaults.textFieldColors(
-                 containerColor = colorResource(R.color.background),
-                 contentColor = colorResource(R.color.text)
-             )*/
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            shape = RoundedCornerShape(20.dp)
         )
+
         Text(
             text = stringResource(R.string.email),
             color = colorResource(R.color.text),
             fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start = 20.dp,
-                    top = 20.dp
-                )
+                .padding(start = 20.dp, top = 20.dp)
         )
+
         TextField(
             value = email,
             onValueChange = { newEmail -> email = newEmail },
-            placeholder = { Text("xyz@gmail.com") },
+            placeholder = { Text("example@domain.ru") },
             textStyle = TextStyle(fontSize = 14.sp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 10.dp
-                ),
-            shape = RoundedCornerShape(20.dp)
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            shape = RoundedCornerShape(20.dp),
+            isError = !isValidEmail(email) && email.isNotEmpty()
         )
+
+        // Подсказка под email полем
+        if (email.isNotEmpty() && !isValidEmail(email)) {
+            Text(
+                text = "Пример: name@domain.ru",
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, top = 4.dp)
+            )
+        }
+
         Text(
             text = stringResource(R.string.password),
             color = colorResource(R.color.text),
             fontSize = 18.sp,
             modifier = Modifier
-                .padding(
-                    start = 20.dp,
-                    top = 20.dp
-                )
+                .padding(start = 20.dp, top = 20.dp)
         )
+
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -191,12 +236,10 @@ fun RegistrationScreen() {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 10.dp
-                ),
+                .padding(horizontal = 20.dp, vertical = 10.dp),
             shape = RoundedCornerShape(20.dp)
         )
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -208,13 +251,15 @@ fun RegistrationScreen() {
             } else {
                 colorResource(id = R.color.sub_text_light)
             }
+
             Box(
                 modifier = Modifier
                     .size(24.dp)
                     .clip(RoundedCornerShape(6.dp))
                     .background(
                         color = if (isChecked) colorResource(R.color.accent)
-                        else colorResource(R.color.sub_text_light))
+                        else colorResource(R.color.sub_text_light)
+                    )
                     .border(
                         width = if (isChecked) 0.dp else 1.dp,
                         color = borderColor,
@@ -223,12 +268,14 @@ fun RegistrationScreen() {
                     .clickable { isChecked = !isChecked },
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.policy_check),
-                    contentDescription = "Согласен с условиями",
-                    tint = colorResource(R.color.text),
-                    modifier = Modifier.size(16.dp)
-                )
+                if (isChecked) {
+                    Icon(
+                        painter = painterResource(R.drawable.policy_check),
+                        contentDescription = "Согласен с условиями",
+                        tint = colorResource(R.color.text),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -236,19 +283,17 @@ fun RegistrationScreen() {
             Text(
                 text = stringResource(R.string.approval),
                 color = colorResource(R.color.hint),
-                style = TextStyle(
-                    textDecoration = TextDecoration.Underline
-                ),
                 fontSize = 16.sp,
-                modifier = Modifier
-                    .clickable { isChecked = !isChecked }
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable { isChecked = !isChecked }
             )
         }
+
         Spacer(modifier = Modifier.height(30.dp))
+
         Button(
-            // colors = colorResource(R.color.accent),
             onClick = {
-                // Регистрация
+                validateAndRegister()
             },
             enabled = isChecked,
             shape = RoundedCornerShape(15.dp),
@@ -262,7 +307,7 @@ fun RegistrationScreen() {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding( horizontal = 20.dp )
+                .padding(horizontal = 20.dp)
                 .height(50.dp)
         ) {
             Text(
@@ -272,21 +317,74 @@ fun RegistrationScreen() {
                 textAlign = TextAlign.Center
             )
         }
+
         Spacer(modifier = Modifier.weight(1f))
+
         Text(
             text = buildAnnotatedString {
-                append(stringResource(R.string.already_have_account))
-                append(" ")
+                withStyle(style = SpanStyle(color = colorResource(R.color.hint))) {
+                    append(stringResource(R.string.already_have_account))
+                    append(" ")
+                }
                 withStyle(style = SpanStyle(color = colorResource(R.color.text))) {
                     append(stringResource(R.string.sign_in))
                 }
             },
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
-            color = colorResource(R.color.hint),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 50.dp)
         )
     }
+}
+
+fun validateEmailDetails(email: String): Pair<Boolean, String> {
+    if (email.isEmpty()) return Pair(false, "Email не может быть пустым")
+
+    if (!email.contains("@")) {
+        return Pair(false, "Email должен содержать символ @")
+    }
+
+    val parts = email.split("@")
+    if (parts.size != 2) {
+        return Pair(false, "Неверный формат email")
+    }
+
+    val localPart = parts[0]
+    val domainPart = parts[1]
+
+    if (localPart.isEmpty()) {
+        return Pair(false, "Имя в email не может быть пустым")
+    }
+
+    if (!localPart.all { it.isLowerCase() || it.isDigit() }) {
+        return Pair(false, "Имя в email может содержать только строчные буквы и цифры")
+    }
+
+    if (!domainPart.contains(".")) {
+        return Pair(false, "Доменное имя должно содержать точку")
+    }
+
+    val domainParts = domainPart.split(".")
+    if (domainParts.size < 2) {
+        return Pair(false, "Неверный формат доменного имени")
+    }
+
+    val domainName = domainParts[0]
+    val topLevelDomain = domainParts[1]
+
+    if (!domainName.all { it.isLowerCase() || it.isDigit() }) {
+        return Pair(false, "Доменное имя может содержать только строчные буквы и цифры")
+    }
+
+    if (topLevelDomain.length < 2) {
+        return Pair(false, "Старший домен должен содержать минимум 2 символа")
+    }
+
+    if (!topLevelDomain.all { it.isLowerCase() }) {
+        return Pair(false, "Старший домен должен содержать только строчные буквы")
+    }
+
+    return Pair(true, "Email корректен")
 }
