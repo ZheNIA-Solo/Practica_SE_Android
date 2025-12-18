@@ -3,6 +3,7 @@ package com.example.project_practice.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -329,33 +330,36 @@ fun RegisterAccount(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Text(
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = colorResource(R.color.hint))) {
-                    append(stringResource(R.string.already_have_account))
-                    append(" ")
-                }
-                withStyle(style = SpanStyle(color = colorResource(R.color.text))) {
-                    append(stringResource(R.string.sign_in))
-                }
-            },
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
+            Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 50.dp)
-                .clickable(onClick = onSignInClick)
-        )
+                .padding(bottom = 50.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.already_have_account) + " ",
+                color = colorResource(R.color.hint),
+                fontSize = 16.sp
+            )
+
+            Text(
+                text = stringResource(R.string.sign_in),
+                color = colorResource(R.color.text),
+                fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable { onSignInClick() }
+            )
+        }
     }
 }
 
-// Preview функция
 @Preview(showBackground = true, name = "Register Account")
 @Composable
 fun RegisterAccountPreview() {
     RegisterAccount(
-        onBackClick = { /* заглушка для preview */ },
-        onRegisterSuccess = { /* заглушка для preview */ },
-        onSignInClick = { /* заглушка для preview */ }
+        onBackClick = {},
+        onRegisterSuccess = {},
+        onSignInClick = {}
     )
 }
