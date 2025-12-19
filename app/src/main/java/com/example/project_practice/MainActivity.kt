@@ -53,11 +53,11 @@ fun AppContent() {
         }
         "signin" -> {
             SignIn(
-               /* onBackClick = {
+                onBackClick = {
                     currentScreen = "register"
                 },
-                onSignInClick = { email, password ->
-                }*/
+                onSignInSuccess = {},
+                onSignInClick = {} // { email, password -> }
             )
         }
     }

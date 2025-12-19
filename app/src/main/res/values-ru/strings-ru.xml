@@ -16,8 +16,10 @@
     <string name="next">Далее</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="sign_in">Войти</string>
-    <string name="new_user">Вы впервые? Создать пользователя</string>
+    <string name="new_user_create">Вы впервые? Создать пользователя</string>
     <string name="already_have_account">Есть аккаунт?</string>
+    <string name="new_user">Вы впервые?</string>
+    <string name="create">Создать</string>
     <string name="recovery">Воcстановить</string>
     <string name="forgot">Забыл пароль</string>
     <string name="enter_email_account">Введите свою учетную запись для  сброса</string>
