@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Project_Practice" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Фон Splash Screen -->
+        <item name="windowSplashScreenBackground">@color/accent</item>
+
+        <!-- Иконка/лого в центре -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon</item>
+
+        <!-- Анимация при скрытии -->
+        <item name="windowSplashScreenAnimationDuration">500</item>
+
+        <!-- После Splash показываем основную тему -->
+        <item name="postSplashScreenTheme">@style/Theme.App.Starting</item>
+    </style>
+
 </resources>

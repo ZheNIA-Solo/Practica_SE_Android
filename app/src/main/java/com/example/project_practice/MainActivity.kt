@@ -19,6 +19,7 @@ import com.example.project_practice.ui.screens.SignIn
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        actionBar?.hide()
         setContent {
             AppContent()
             /*ProjectPracticeTheme {
