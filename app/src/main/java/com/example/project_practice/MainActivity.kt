@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.example.project_practice.ui.screens.Home
 import com.example.project_practice.ui.screens.OnboardingScreen
 import com.example.project_practice.ui.screens.RegisterAccount
 import com.example.project_practice.ui.screens.SignIn
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = getPreferences(MODE_PRIVATE)
         val hasSeenOnboarding = sharedPref.getBoolean("has_seen_onboarding", false)
 
         setContent {
@@ -55,10 +56,10 @@ fun AppContent() {
         "register" -> {
             RegisterAccount(
                 onBackClick = {
-                    // Логика при нажатии кнопки "<" (назад)
+                    currentScreen = "onboard"
                 },
                 onRegisterSuccess = {
-                    currentScreen = "signin"
+                    currentScreen = "home"
                 },
                 onSignInClick = {
                     currentScreen = "signin"
@@ -70,8 +71,22 @@ fun AppContent() {
                 onBackClick = {
                     currentScreen = "register"
                 },
-                onSignInSuccess = {},
-                onSignInClick = {} // { email, password -> }
+                onSignInSuccess = {
+                    currentScreen = "home"
+                },
+                onSignInClick = {
+                    currentScreen = "register"
+                }
+            )
+        }
+        "home" -> {
+            Home()
+        }
+        "onboard" -> {
+            OnboardingScreen(
+                onFinish = {
+                    currentScreen = "register"
+                }
             )
         }
     }

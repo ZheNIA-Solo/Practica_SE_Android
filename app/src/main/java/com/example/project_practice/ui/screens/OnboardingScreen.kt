@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +45,8 @@ data class OnboardingPage(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnboardingScreen(onFinish: () -> Unit) {
+fun OnboardingScreen(
+    onFinish: () -> Unit) {
     val pages = listOf(
         OnboardingPage(
             imageRes = R.drawable.onboarding_1,
@@ -97,7 +99,6 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
                 } else {
-                    // Завершение Onboarding
                     onFinish()
                 }
             },
@@ -120,7 +121,7 @@ fun OnboardingPageContent(pageData: OnboardingPage) {
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         // Изображение
         Box(
